@@ -12,6 +12,6 @@ export class NavComponent {
 
   openModal(event: Event): void {
     event.preventDefault();
-    this.modalService.toggleModal()
+    this.modalService.toggleModal('auth');
   }
 }
