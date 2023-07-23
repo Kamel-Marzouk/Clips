@@ -1,8 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { provideEnvironmentNgxMask, NgxMaskDirective } from 'ngx-mask';
+
 import { ModalComponent } from './modal/modal.component';
 import { TapsContainerComponent } from './taps-container/taps-container.component';
 import { TapComponent } from './tap/tap.component';
+import { InputComponent } from './input/input.component';
+import { AlertComponent } from './alert/alert.component';
 
 
 
@@ -10,15 +15,22 @@ import { TapComponent } from './tap/tap.component';
   declarations: [
     ModalComponent,
     TapsContainerComponent,
-    TapComponent
+    TapComponent,
+    InputComponent,
+    AlertComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule,
+    NgxMaskDirective
   ],
-  exports:[
+  exports: [
     ModalComponent,
     TapsContainerComponent,
-    TapComponent
-  ]
+    TapComponent,
+    InputComponent,
+    AlertComponent
+  ],
+  providers: [provideEnvironmentNgxMask()]
 })
 export class SharedModule { }
