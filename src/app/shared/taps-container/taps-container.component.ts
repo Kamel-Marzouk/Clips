@@ -14,8 +14,9 @@ export class TapsContainerComponent implements AfterContentInit {
     if (!activeTabs || !activeTabs.length) this.selectTab(this.tabs!.first);
   }
 
-  selectTab(tab: TapComponent): void {
+  selectTab(tab: TapComponent): boolean {
     this.tabs?.forEach((tab: TapComponent) => tab.active = false);
     tab.active = true;
+    return false
   }
 }
