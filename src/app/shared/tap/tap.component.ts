@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-tap',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./tap.component.css']
 })
 export class TapComponent {
+  @Input() tabTitle: string = '';
+  @Input() active: boolean = false;
 
 }
