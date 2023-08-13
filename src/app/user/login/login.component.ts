@@ -1,5 +1,6 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-login',
@@ -23,11 +24,29 @@ export class LoginComponent {
 
   showAlert: boolean = false;
   alertColor: string = 'blue';
-  alertMessage: string = 'You are logged in successfully';
+  alertMessage: string = 'Please wait! We are logging you in.';
+  inSubmission: boolean = false;
 
-  login(): void {
+  constructor(private fireAuth: AngularFireAuth) {}
+
+  async login() {
     this.showAlert = true;
     this.alertColor = 'blue';
-    this.alertMessage = 'You are logged in successfully';
+    this.alertMessage = 'Please wait! We are logging you in.';
+    this.inSubmission = true;
+    try {
+      await this.fireAuth.signInWithEmailAndPassword(
+        this.loginForm.value.email,
+        this.loginForm.value.password
+      );
+    } catch (error) {
+      this.inSubmission = false;
+      this.alertMessage =
+        'An unecpected error occured. Please try again later.';
+      this.alertColor = 'red';
+      return;
+    }
+    this.alertColor = 'green';
+    this.alertMessage = 'Success! You are now logged in.';
   }
 }
