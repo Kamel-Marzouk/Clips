@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+import { RegisterValidators } from '../validators/register-validators';
 
 @Component({
   selector: 'app-register',
@@ -40,8 +41,8 @@ export class RegisterComponent {
     age: this.age,
     password: this.password,
     confirmPassword: this.confirmPassword,
-    phoneNumber: this.phoneNumber
-  });
+    phoneNumber: this.phoneNumber,
+  },[RegisterValidators.match('password','confirmPassword')]);
 
   showAlert: boolean = false;
   inSubmission: boolean = false;
