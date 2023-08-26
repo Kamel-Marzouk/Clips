@@ -8,6 +8,7 @@ import { TapsContainerComponent } from './taps-container/taps-container.componen
 import { TapComponent } from './tap/tap.component';
 import { InputComponent } from './input/input.component';
 import { AlertComponent } from './alert/alert.component';
+import { EventBlockerDirective } from './directives/event-blocker.directive';
 
 
 
@@ -17,7 +18,8 @@ import { AlertComponent } from './alert/alert.component';
     TapsContainerComponent,
     TapComponent,
     InputComponent,
-    AlertComponent
+    AlertComponent,
+    EventBlockerDirective
   ],
   imports: [
     CommonModule,
@@ -29,7 +31,8 @@ import { AlertComponent } from './alert/alert.component';
     TapsContainerComponent,
     TapComponent,
     InputComponent,
-    AlertComponent
+    AlertComponent,
+    EventBlockerDirective
   ],
   providers: [provideEnvironmentNgxMask()]
 })
