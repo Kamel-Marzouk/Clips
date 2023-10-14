@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+import {
+  AngularFireStorage,
+  AngularFireStorageReference,
+  AngularFireUploadTask,
+} from '@angular/fire/compat/storage';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { v4 as uuid } from 'uuid';
-import { last , switchMap} from 'rxjs';
+import { last, switchMap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import Clip from 'src/app/models/clip.model';
 
 @Component({
   selector: 'app-upload',
@@ -12,7 +18,6 @@ import { last , switchMap} from 'rxjs';
   styleUrls: ['./upload.component.css'],
 })
 export class UploadComponent implements OnInit {
-
   isDragover: boolean = false;
   file: File | null = null;
   nextStep: boolean = false;
@@ -32,9 +37,9 @@ export class UploadComponent implements OnInit {
   constructor(
     private storage: AngularFireStorage,
     private auth: AngularFireAuth
-    ) {
-      auth.user.subscribe((user: firebase.User | null)=> this.user = user);
-    }
+  ) {
+    auth.user.subscribe((user: firebase.User | null) => (this.user = user));
+  }
 
   ngOnInit(): void {}
 
@@ -52,36 +57,43 @@ export class UploadComponent implements OnInit {
     this.alertMessage = 'Please wait! Your clip is being uploaded.';
     this.inSubmission = true;
     this.showPercentage = true;
-    const clipFileName = uuid();
-    const clipPath = `clips/${clipFileName}.mp4`;
-    const task = this.storage.upload(clipPath, this.file);
-    const clipRef = this.storage.ref(clipPath);
+    const clipFileName: string = uuid();
+    const clipPath: string = `clips/${clipFileName}.mp4`;
+    const task: AngularFireUploadTask = this.storage.upload(
+      clipPath,
+      this.file
+    );
+    const clipRef: AngularFireStorageReference = this.storage.ref(clipPath);
 
     task.percentageChanges().subscribe((progress) => {
       this.percentage = (progress as number) / 100;
     });
-    task.snapshotChanges().pipe(
-      last(),
-      switchMap(()=> clipRef.getDownloadURL())
-    ).subscribe({
-      next:(url)=>{
-        const clip = {
-          uid:this.user?.uid,
-          displayName:this.user?.displayName,
-          title:this.title.value,
-          fileName:`${clipFileName}.mp4`,
-          url
-        };
-        this.alertColor = 'green';
-        this.alertMessage = 'Success! Your clip is now ready to share with the world.';
-        this.showPercentage=false;
-      },
-      error:(error)=>{
-        this.alertColor = 'red';
-        this.alertMessage = 'Upload faild! Please try again later.';
-        this.inSubmission=true;
-        this.showPercentage=false;
-      }
-    })
+    task
+      .snapshotChanges()
+      .pipe(
+        last(),
+        switchMap(() => clipRef.getDownloadURL())
+      )
+      .subscribe({
+        next: (url: string) => {
+          const clip: Clip = {
+            uid: this.user?.uid,
+            displayName: this.user?.displayName,
+            title: this.title.value,
+            fileName: `${clipFileName}.mp4`,
+            url,
+          };
+          this.alertColor = 'green';
+          this.alertMessage =
+            'Success! Your clip is now ready to share with the world.';
+          this.showPercentage = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.alertColor = 'red';
+          this.alertMessage = 'Upload faild! Please try again later.';
+          this.inSubmission = true;
+          this.showPercentage = false;
+        },
+      });
   }
 }
