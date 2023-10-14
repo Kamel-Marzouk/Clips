@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { last, switchMap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import Clip from 'src/app/models/clip.model';
+import { ClipService } from 'src/app/services/clip.service';
 
 @Component({
   selector: 'app-upload',
@@ -36,7 +37,8 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private storage: AngularFireStorage,
-    private auth: AngularFireAuth
+    private auth: AngularFireAuth,
+    private clipService: ClipService
   ) {
     auth.user.subscribe((user: firebase.User | null) => (this.user = user));
   }
@@ -77,12 +79,13 @@ export class UploadComponent implements OnInit {
       .subscribe({
         next: (url: string) => {
           const clip: Clip = {
-            uid: this.user?.uid,
-            displayName: this.user?.displayName,
-            title: this.title.value,
+            uid: this.user?.uid as string,
+            displayName: this.user?.displayName as string,
+            title: this.title.value as string,
             fileName: `${clipFileName}.mp4`,
             url,
           };
+          this.clipService.createClip(clip);
           this.alertColor = 'green';
           this.alertMessage =
             'Success! Your clip is now ready to share with the world.';
