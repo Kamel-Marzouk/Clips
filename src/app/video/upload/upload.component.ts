@@ -54,6 +54,7 @@ export class UploadComponent implements OnInit {
   }
 
   uploadFile(): void {
+    this.uploadForm.disable();
     this.showAlert = true;
     this.alertColor = 'blue';
     this.alertMessage = 'Please wait! Your clip is being uploaded.';
@@ -92,6 +93,7 @@ export class UploadComponent implements OnInit {
           this.showPercentage = false;
         },
         error: (error: HttpErrorResponse) => {
+          this.uploadForm.enable();
           this.alertColor = 'red';
           this.alertMessage = 'Upload faild! Please try again later.';
           this.inSubmission = true;
