@@ -87,6 +87,7 @@ export class UploadComponent implements OnInit, OnDestroy {
             title: this.title.value as string,
             fileName: `${clipFileName}.mp4`,
             url,
+            timestamp:firebase.firestore.FieldValue.serverTimestamp()
           };
           const clipDocRef = await this.clipService.createClip(clip);
           this.alertColor = 'green';
