@@ -9,7 +9,7 @@ import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/c
 import firebase from 'firebase/compat/app';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { switchMap, map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import Clip from '../models/clip.model';
 
 @Injectable({
@@ -30,12 +30,14 @@ export class ClipService {
     return this.clipsCollection.add(data);
   }
 
-  getUsersClips(): Observable<any> {
-    return this.auth.user.pipe(
-      switchMap((user) => {
+  getUsersClips(sort$: BehaviorSubject<string>): Observable<any> {
+    return combineLatest([this.auth.user, sort$]).pipe(
+      switchMap((values: any[]) => {
+        const [user, sort] = values;
         if (!user) return of([]);
-        const query: firebase.firestore.Query<Clip> =
-          this.clipsCollection.ref.where('uid', '==', user.uid);
+        const query: firebase.firestore.Query<Clip> = this.clipsCollection.ref
+          .where('uid', '==', user.uid)
+          .orderBy('timestamp', sort == '1' ? 'desc' : 'asc');
         return query.get();
       }),
       map((snapshot: any) => (snapshot as QuerySnapshot<Clip>).docs)
