@@ -12,6 +12,7 @@ import { ModalService } from 'src/app/services/modal.service';
 export class ManageComponent implements OnInit {
   videoOrder: string = '1';
   clips: Clip[] = [];
+  activeClip: Clip | null = null;
 
   constructor(
     private router: Router,
@@ -50,6 +51,13 @@ export class ManageComponent implements OnInit {
 
   openModal(event: Event, clip: Clip) {
     event.preventDefault();
+    this.activeClip = clip;
     this.modal.toggleModal('editClip');
+  }
+
+  update(event: Clip): void {
+    this.clips.forEach((element: Clip, index: number) => {
+      if (element.docID === event.docID) this.clips[index].title = event.title;
+    });
   }
 }
