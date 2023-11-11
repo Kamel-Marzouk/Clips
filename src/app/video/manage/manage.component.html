@@ -45,7 +45,7 @@
       <!-- Actions -->
       <div class="flex text-center text-2xl bg-gray-800 p-2 mt-auto">
         <a
-          href="#"
+        (click)="openModal($event,clip)"
           class="flex-1 p-2 border-right border-r-2 border-gray-700 transition hover:text-indigo-400"
         >
           <span class="material-icons text-base">build</span>
@@ -60,3 +60,5 @@
     </div>
   </div>
 </div>
+
+<app-edit></app-edit>

@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app';
 
 export default interface Clip {
+  docID?: string;
   uid: string;
   title: string;
   displayName: string;
