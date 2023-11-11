@@ -60,4 +60,12 @@ export class ManageComponent implements OnInit {
       if (element.docID === event.docID) this.clips[index].title = event.title;
     });
   }
+
+  deleteClip(event: Event, clip: Clip): void {
+    event.preventDefault();
+    this.clipService.deleteClip(clip);
+    this.clips.forEach((element: Clip, index: number) => {
+      if (element.docID === clip.docID) this.clips.splice(index, 1);
+    });
+  }
 }
